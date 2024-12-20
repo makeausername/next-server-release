@@ -40,23 +40,6 @@ install_base() {
     fi
 }
 
-install_bbr() {
-    echo -e "${green}开始安装BBR加速...${plain}"
-    if [[ $os == "centos" ]]; then
-        yum install -y kernel-ml kernel-ml-devel
-        grub2-set-default 0
-        echo "net.core.default_qdisc = fq" >> /etc/sysctl.conf
-        echo "net.ipv4.tcp_congestion_control = bbr" >> /etc/sysctl.conf
-        sysctl -p
-    else
-        apt install -y linux-image-$(uname -r) linux-headers-$(uname -r)
-        echo "net.core.default_qdisc = fq" >> /etc/sysctl.conf
-        echo "net.ipv4.tcp_congestion_control = bbr" >> /etc/sysctl.conf
-        sysctl -p
-    fi
-    echo -e "${green}BBR加速安装完成，请重启系统使其生效！${plain}"
-}
-
 install_next_server() {
     if [[ -e /usr/local/next-server/ ]]; then
         rm /usr/local/next-server/ -rf
@@ -128,5 +111,4 @@ install_next_server() {
 
 echo -e "${green}开始安装${plain}"
 install_base
-install_bbr
 install_next_server $1
